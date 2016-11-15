@@ -33,10 +33,14 @@
           }
 
           parsingNode = document.createElement('a');
+          var observeHandler = attrs.$observe(attr, updateValue);
+          var watchHandler = scope.$on('$locationChangeSuccess', updateValue);
 
-          attrs.$observe(attr, updateValue);
-          $rootScope.$on('$locationChangeSuccess', updateValue);
-
+          scope.$on('$destroy', function(){
+              observeHandler();
+              watchHandler();
+          });
+          
           function updateValue() {
             var newVal;
             parsingNode.setAttribute(
